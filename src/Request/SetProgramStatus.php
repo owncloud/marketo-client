@@ -4,7 +4,7 @@
 namespace MarketoClient\Request;
 
 
-class ProgramStatus implements \JsonSerializable
+class SetProgramStatus implements RequestInterface
 {
     private $programId;
     private $leadId;
@@ -17,22 +17,14 @@ class ProgramStatus implements \JsonSerializable
         $this->status = $status;
     }
 
-
-    public function getProgramId()
+    public function getMethod()
     {
-        return $this->programId;
+        return 'POST';
     }
 
-
-    public function getLeadId()
+    public function getPath()
     {
-        return $this->leadId;
-    }
-
-
-    public function getStatus()
-    {
-        return $this->status;
+        return "leads/programs/{$this->programId}/status.json";
     }
 
 

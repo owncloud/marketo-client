@@ -3,7 +3,8 @@
 namespace MarketoClient;
 
 
-use MarketoClient\Request\ProgramStatus;
+use MarketoClient\Request\SetProgramStatus;
+use MarketoClient\Request\RequestInterface;
 use MarketoClient\Response\AccessToken;
 
 class Client
@@ -54,48 +55,25 @@ class Client
 
     }
 
-    public function pushLead($leadData, $programName)
+    /**
+     * @param SetProgramStatus $req
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function execute(RequestInterface $req)
     {
-        if (!isset($leadData['email']) || $leadData['email'] === '') {
-            return false;
-        }
-
         $this->authenticateIfRequired();
 
-        $response = $this->client->request('POST', 'leads/push.json',
-            [
-                'query' => ['access_token' => $this->accessToken->getToken()],
-                'body' => json_encode([
-                    'action' => 'createOrUpdate',
-                    'programName' => $programName,
-                    'lookupField' => 'email',
-                    'input' => [$leadData]
-                ]),
-            ]);
-
+        $response = $this->client->request($req->getMethod(), $req->getPath(), [
+            'query' => ['accessToken' => $this->accessToken->getToken()],
+            'body' => json_encode($req),
+        ]);
         $result = json_decode($response->getBody()->getContents(), true);
 
         return [
             'success' => $result['success'],
             'result' => $result['result'][0]
         ];
-    }
-
-    /**
-     * @param ProgramStatus $status
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function setProgramStatus(ProgramStatus $status)
-    {
-        $this->authenticateIfRequired();
-
-        $response = $this->client->request('POST', "leads/programs/{$status->getProgramId()}/status.json", [
-            'query' => ['accessToken' => $this->accessToken],
-            'body' => json_encode($status),
-        ]);
-        $result = json_decode($response->getBody()->getContents(), true);
-        return ['success' => $result['success'], 'result' => $result['result'][0]];
     }
 }
 
