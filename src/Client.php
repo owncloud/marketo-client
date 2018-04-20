@@ -2,8 +2,6 @@
 
 namespace MarketoClient;
 
-
-use MarketoClient\Request\SetProgramStatus;
 use MarketoClient\Request\RequestInterface;
 use MarketoClient\Response\AccessToken;
 
@@ -27,7 +25,6 @@ class Client
 
         $this->client = new \GuzzleHttp\Client([
             'base_uri' => $this->baseUri . '/rest/v1/',
-            'headers' => ['Content-Type' => 'application/json']
         ]);
     }
 
@@ -40,6 +37,7 @@ class Client
         $client = new \GuzzleHttp\Client([
             'base_uri' => $this->baseUri . '/identity/'
         ]);
+
 
         $response = $client->request('GET', 'oauth/token', [
             'query' => [
@@ -55,8 +53,9 @@ class Client
 
     }
 
+
     /**
-     * @param SetProgramStatus $req
+     * @param RequestInterface $req
      * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -65,7 +64,10 @@ class Client
         $this->authenticateIfRequired();
 
         $response = $this->client->request($req->getMethod(), $req->getPath(), [
-            'query' => ['accessToken' => $this->accessToken->getToken()],
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => "Bearer {$this->accessToken->getToken()}"
+            ],
             'body' => json_encode($req),
         ]);
         $result = json_decode($response->getBody()->getContents(), true);
