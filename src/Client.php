@@ -2,8 +2,7 @@
 
 namespace MarketoClient;
 
-use MarketoClient\Request\RequestInterface;
-use MarketoClient\Response\AccessToken;
+use MarketoClient\Client\AccessToken;
 
 class Client
 {
@@ -53,29 +52,30 @@ class Client
 
     }
 
-
     /**
      * @param RequestInterface $req
-     * @return array
+     * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function execute(RequestInterface $req)
     {
         $this->authenticateIfRequired();
 
-        $response = $this->client->request($req->getMethod(), $req->getPath(), [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Authorization' => "Bearer {$this->accessToken->getToken()}"
-            ],
-            'body' => json_encode($req),
-        ]);
+        try {
+
+            $response = $this->client->request($req->getMethod(), $req->getPath(), [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Authorization' => "Bearer {$this->accessToken->getToken()}"
+                ],
+                'body' => json_encode($req),
+            ]);
+        } catch (\Exception $e) {
+            throw new \RuntimeException($e->getMessage(), $e->getCode(), $e);
+        }
         $result = json_decode($response->getBody()->getContents(), true);
 
-        return [
-            'success' => $result['success'],
-            'result' => $result['result'][0]
-        ];
+        return new Response($result);
     }
 }
 
