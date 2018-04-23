@@ -3,6 +3,10 @@
 namespace MarketoClient\Request;
 
 
+
+
+use MarketoClient\RequestInterface;
+
 class PushLeadBy implements RequestInterface
 {
 

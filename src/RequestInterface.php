@@ -1,7 +1,7 @@
 <?php
 
 
-namespace MarketoClient\Request;
+namespace MarketoClient;
 
 
 interface RequestInterface extends \JsonSerializable

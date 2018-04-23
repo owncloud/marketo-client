@@ -1,6 +1,6 @@
 <?php
 
-namespace MarketoClient\Response;
+namespace MarketoClient\Client;
 
 
 class AccessToken
@@ -16,7 +16,7 @@ class AccessToken
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getToken()
     {
@@ -24,7 +24,7 @@ class AccessToken
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getExpiresIn()
     {

@@ -4,6 +4,8 @@
 namespace MarketoClient\Request;
 
 
+use MarketoClient\RequestInterface;
+
 class SetProgramStatus implements RequestInterface
 {
     private $programId;
