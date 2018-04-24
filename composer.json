@@ -1,7 +1,7 @@
 {
     "name": "owncloud/marketo-client",
     "require": {
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.3"
     },
 
     "autoload": {
