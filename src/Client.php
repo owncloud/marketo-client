@@ -3,6 +3,7 @@
 namespace MarketoClient;
 
 use MarketoClient\Client\AccessToken;
+use MarketoClient\Client\AuthenticationException;
 
 class Client
 {
@@ -27,6 +28,10 @@ class Client
         ]);
     }
 
+    /**
+     * @throws AuthenticationException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     private function authenticateIfRequired()
     {
         if ($this->accessToken instanceof AccessToken && !$this->accessToken->hasExpired()) {
@@ -48,13 +53,21 @@ class Client
 
         $result = json_decode($response->getBody()->getContents());
 
+
+
+        if ($response->getStatusCode() !== 200) {
+            throw new AuthenticationException($result['error_description']);
+        }
+
         $this->accessToken = new AccessToken($result->access_token, $result->expires_in);
 
     }
 
+
     /**
      * @param RequestInterface $req
      * @return Response
+     * @throws AuthenticationException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function execute(RequestInterface $req)
