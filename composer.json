@@ -1,5 +1,5 @@
 {
-    "name": "owncloud/marketo-client",
+    "name": "hurradieweltgehtunter/marketo-client",
     "require": {
         "guzzlehttp/guzzle": "~6.3"
     },
