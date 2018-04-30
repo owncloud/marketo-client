@@ -5,20 +5,19 @@ namespace MarketoClient\Client;
 
 class AccessToken
 {
-
     private $token;
-    private $expiresIn;
+    private $validUntil;
 
-    public function __construct($token, $expiresIn)
+    public function __construct(string $token, int $validUntil)
     {
         $this->token = $token;
-        $this->expiresIn = $expiresIn;
+        $this->validUntil = $validUntil;
     }
 
     /**
      * @return string
      */
-    public function getToken()
+    public function getBearerToken(): string
     {
         return $this->token;
     }
@@ -26,18 +25,20 @@ class AccessToken
     /**
      * @return int
      */
-    public function getExpiresIn()
+    public function getValidUntil(): int
     {
-        return $this->expiresIn;
+        return $this->validUntil;
     }
 
-    public function hasExpired()
+    public function hasExpired(): bool
     {
-        return $this->expiresIn - time() <= 0;
+
+        return time() > $this->validUntil;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->token;
     }
 }
+

@@ -3,7 +3,6 @@
 
 namespace MarketoClient\Request;
 
-
 use MarketoClient\RequestInterface;
 
 class SetProgramStatus implements RequestInterface
@@ -19,24 +18,21 @@ class SetProgramStatus implements RequestInterface
         $this->status = $status;
     }
 
-    public function getMethod()
+    public function getMethod(): string
     {
         return 'POST';
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return "leads/programs/{$this->programId}/status.json";
     }
 
+    public function getQuery(): array
+    {
+        return [];
+    }
 
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
     public function jsonSerialize()
     {
         return [
@@ -47,3 +43,4 @@ class SetProgramStatus implements RequestInterface
         ];
     }
 }
+

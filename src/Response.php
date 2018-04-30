@@ -1,6 +1,8 @@
 <?php
 namespace MarketoClient;
 
+use MarketoClient\Response\Error;
+
 class Response
 {
     protected $data;
@@ -10,25 +12,30 @@ class Response
         $this->data = $data;
     }
 
-    public function getResult()
+    /**
+     * @return Error[]
+     */
+    public function getResult(): array
     {
         return isset($this->data['result'])? $this->data['result']: [];
     }
 
 
-    public function getError()
+    public function getErrors(): \Iterator
     {
-        if (isset($this->data['errors']) && count($this->data['errors'])) {
-            return $this->data['errors'][0];
+        if (isset($this->data['errors']) && \count($this->data['errors'])) {
+            foreach ($this->data['errors'] as $error) {
+                yield new Error($error['code'], $error['message']);
+
+            }
         }
 
-        return [];
+        return new \EmptyIterator();
     }
 
 
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return true === $this->data['success'];
     }
-
 }
