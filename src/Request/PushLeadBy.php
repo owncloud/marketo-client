@@ -17,6 +17,7 @@ class PushLeadBy implements RequestInterface
 
     public function __construct(string $lookupField, array $leadData)
     {
+        $this->lookupField = $lookupField;
         $this->leadData = $leadData;
 
         if (!isset($leadData[$this->lookupField]) || !$leadData[$this->lookupField]) {
