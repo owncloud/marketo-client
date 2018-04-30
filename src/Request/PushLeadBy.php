@@ -2,9 +2,6 @@
 
 namespace MarketoClient\Request;
 
-
-
-
 use MarketoClient\RequestInterface;
 
 class PushLeadBy implements RequestInterface
@@ -13,43 +10,104 @@ class PushLeadBy implements RequestInterface
     private $lookupField;
     private $programName;
     private $leadData;
+    private $leadSource;
+    private $reason;
 
-    public function __construct($lookupField, $programName, array $leadData)
+    private $requestBody;
+
+    public function __construct(string $lookupField, array $leadData)
     {
-        $this->lookupField = $lookupField;
-        $this->programName = $programName;
         $this->leadData = $leadData;
 
         if (!isset($leadData[$this->lookupField]) || !$leadData[$this->lookupField]) {
             throw new \InvalidArgumentException("Lookup field $lookupField not found in lead data.");
         }
+
+        $this->requestBody = [
+            'action' => 'createOrUpdate',
+            'lookupField' => $this->lookupField,
+            'input' => [$this->leadData]
+        ];
     }
 
-
-    public function getMethod()
+    public function getMethod(): string
     {
         return 'POST';
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return 'leads/push.json';
     }
 
+    public function getQuery(): array
+    {
+        return [];
+    }
+
+    public function getLookupField(): ?string
+    {
+        return $this->lookupField;
+    }
+
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
+     * @return string
      */
+    public function getProgramName(): ?string
+    {
+        return $this->programName;
+    }
+
+    /**
+     * @param string $programName
+     * @return PushLeadBy
+     */
+    public function setProgramName(string $programName): PushLeadBy
+    {
+        $this->programName = $programName;
+        $this->requestBody['programName'] = $programName;
+
+        return $this;
+    }
+
+    public function getLeadData(): array
+    {
+        return $this->leadData;
+    }
+
+    public function getLeadSource(): ?string
+    {
+        return $this->leadSource;
+    }
+
+    public function setLeadSource(string $leadSource): PushLeadBy
+    {
+        $this->leadSource = $leadSource;
+        $this->requestBody['source'] = $leadSource;
+
+        return $this;
+    }
+
+    public function getReason(): ?string
+    {
+        return $this->reason;
+    }
+
+    /**
+     * @param string $reason
+     * @return PushLeadBy
+     */
+    public function setReason(string $reason): PushLeadBy
+    {
+        $this->reason = $reason;
+        $this->requestBody['reason'] = $reason;
+
+        return $this;
+    }
+
     public function jsonSerialize()
     {
-        return [
-            'action' => 'createOrUpdate',
-            'lookupField' => $this->lookupField,
-            'programName' => $this->programName,
-            'input' => [$this->leadData]
-        ];
+        return $this->requestBody;
     }
 }
+
