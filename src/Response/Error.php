@@ -32,6 +32,6 @@ class Error
 
 
     public function tokenHasExpired() {
-        return $this->code === 602;
+        return $this->code === '602';
     }
 }

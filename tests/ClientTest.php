@@ -131,10 +131,11 @@ class ClientTest extends TestCase
             ])),
         ]);
 
-        $resp = $this->marketoClient->execute($this->createMock(\MarketoClient\RequestInterface::class));
+        $this->marketoClient->execute($this->createMock(\MarketoClient\RequestInterface::class));
 
         // Ignore first auth request
         array_shift($this->container);
+
 
         $bearer = array_shift($this->container)['request']->getHeaderLine('Authorization');
         $this->assertSame('Bearer old-token', $bearer);
