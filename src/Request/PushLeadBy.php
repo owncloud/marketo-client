@@ -1,5 +1,4 @@
 <?php
-
 namespace MarketoClient\Request;
 
 use MarketoClient\RequestInterface;
@@ -9,6 +8,7 @@ class PushLeadBy implements RequestInterface
 
     private $lookupField;
     private $programName;
+    private $programStatus;
     private $leadData;
     private $leadSource;
     private $reason;
@@ -19,7 +19,6 @@ class PushLeadBy implements RequestInterface
     {
         $this->lookupField = $lookupField;
         $this->leadData = $leadData;
-
         if (!isset($leadData[$this->lookupField]) || !$leadData[$this->lookupField]) {
             throw new \InvalidArgumentException("Lookup field $lookupField not found in lead data.");
         }
@@ -111,4 +110,3 @@ class PushLeadBy implements RequestInterface
         return $this->requestBody;
     }
 }
-
