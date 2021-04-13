@@ -2,6 +2,7 @@
     "name": "hurradieweltgehtunter/marketo-client",
     "require": {
         "php": ">=7.1.0",
+        "ext-json": "*",
         "guzzlehttp/guzzle": "~6.3"
     },
     "require-dev": {
